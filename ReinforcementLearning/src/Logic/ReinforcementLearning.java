@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Logic;
+import Interface.*;
 
 /**
  *
@@ -14,8 +15,12 @@ public class ReinforcementLearning {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         // TODO code application logic here
+        MainInterface lo = new MainInterface();
+        
     }
     
 }
+
