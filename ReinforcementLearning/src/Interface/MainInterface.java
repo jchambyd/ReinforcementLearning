@@ -6,23 +6,12 @@
 package Interface;
 
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.text.DecimalFormat;
 import java.util.Random;
-
-
-class State
-{
-    int pnX, pnY;
-    
-    public State(int tnX, int tnY)
-    {
-        this.pnX = tnX;
-        this.pnY = tnY;
-    }
-}
-
+import Logic.*;
 
 /**
  *
@@ -32,33 +21,12 @@ public class MainInterface extends javax.swing.JFrame {
 
     private Graphics2D poGraphics;
     private Line2D poLineBuffer;
-    
-    private int pnNumRows;
-    private int pnNumColumns;
-    
-    private int[][] poR;
-    private float[][][] poQ;
-    private State poInitialState = new State(3, 0);
-    private State poFinalState = new State(3, 11);
-    
-    
-    private static final int UP = 0;
-    private static final int DOWN = 1;
-    private static final int LEFT = 2;
-    private static final int RIGTH = 3;
-    
-    int paMoveX [] = {-1, 1, 0, 0};
-    int paMoveY [] = {0, 0, -1, 1};    
-    
-    private float pnGamma = 1f;
-        
+     
     /**
      * Creates new form MainInterface
      */
     public MainInterface() {
-        initComponents();
-        mxInitial();
-        mxQ_Learning();
+        initComponents();        
     }
 
     /**
@@ -71,21 +39,46 @@ public class MainInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         pnlTable = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        cmbStart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        pnlTable = new GPanel();
         pnlTable.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout pnlTableLayout = new javax.swing.GroupLayout(pnlTable);
         pnlTable.setLayout(pnlTableLayout);
         pnlTableLayout.setHorizontalGroup(
             pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 518, Short.MAX_VALUE)
+            .addGap(0, 1021, Short.MAX_VALUE)
         );
         pnlTableLayout.setVerticalGroup(
             pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 188, Short.MAX_VALUE)
+            .addGap(0, 449, Short.MAX_VALUE)
         );
+
+        jButton1.setText("jButton1");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+
+        cmbStart.setText("jButton3");
+        cmbStart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cmbStartMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,17 +88,46 @@ public class MainInterface extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(pnlTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jButton1)
+                .addGap(67, 67, 67)
+                .addComponent(jButton2)
+                .addGap(38, 38, 38)
+                .addComponent(cmbStart)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(286, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(cmbStart))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:        
+        //mxClean();
+        mxDrawTable();
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        ((GPanel)this.pnlTable).repaint();
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void cmbStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbStartMouseClicked
+        // TODO add your handling code here:
+        mxQ_Learning();
+    }//GEN-LAST:event_cmbStartMouseClicked
 
     /**
      * @param args the command line arguments
@@ -142,176 +164,52 @@ public class MainInterface extends javax.swing.JFrame {
         });
     }
     
-    
-    void mxInitial()
-    {
-        this.pnNumRows = 4;
-        this.pnNumColumns = 12;
-        
-        this.poR = new int[this.pnNumRows][this.pnNumColumns];
-        this.poQ = new float[this.pnNumRows][this.pnNumColumns][4];
-        
-        
-        for(int i = 0; i < pnNumRows; i++)
-            for(int j = 0; j < pnNumColumns; j++)
-                poR[i][j] = -1;                
-        
-        for(int i = 1; i < 10; i++)
-            poR[3][i] = -100;
-        
-        for(int i = 0; i < pnNumRows; i++)
-            for(int j = 0; j < pnNumColumns; j++)
-                for(int k = 0; k < 4; k++)
-                    poQ[i][j][k] = 0f;
-                
-    }
-    
     void mxQ_Learning()
     {
-        State loStateTmp = this.poInitialState;
-        Random loRandom = new Random();
-        int lnAction = 0, lnCont = 0;    
+        QLearning loQ = new QLearning();
+                
+        loQ.mxStartQLearning();
         
-        
-        for(int i = 0 ; i < 100; i++)
-        {
-            System.out.println("Episodio: " + i);
-            
-            lnCont = 0;
-            
-            loStateTmp  = this.poInitialState;
-            
-            while((loStateTmp.pnX != this.poFinalState.pnX || loStateTmp.pnY != this.poFinalState.pnY) && lnCont < 100)
-            {   
-                lnCont++;
-
-                System.out.println(lnCont);
-
-                mxPrint(loStateTmp);
-
-                mxPrintQ();
-
-                if(lnCont % 2 == 0)
-                    lnAction = loRandom.nextInt(4);
-                else
-                    lnAction = mxGetMaxAction(loStateTmp);
-
-                State loNextState = getNextState(loStateTmp, lnAction);
-
-                this.poQ[loStateTmp.pnX][loStateTmp.pnY][lnAction] += (1f /(float)lnCont) * (poR[loNextState.pnX][loNextState.pnY] + pnGamma * (mxGetQ_Value(loNextState, mxGetMaxAction(loNextState))) - mxGetQ_Value(loStateTmp, lnAction));
-
-                loStateTmp = loNextState;
-            }
-        }
-    }
-    
-    private void mxPrint(State toState)
-    {
-        for(int i = 0; i < pnNumRows; i++)
-        {
-            for(int j = 0; j < pnNumColumns; j++)
-            {
-                if(toState.pnX == i && toState.pnY == j)
-                    System.out.print("X");
-                else
-                    System.out.print("0");
-            }
-            System.out.println("");
-        }
-        System.out.println("\n");
-    }
-    
-    private void mxPrintQ()
-    {
-        DecimalFormat loDecimalFormat = new DecimalFormat("0.000");
-        
-        
-        for(int i = 0; i < pnNumRows; i++)
-        {
-            for(int k = 0; k < 4 ; k++)
-            {
-                for(int j = 0; j < pnNumColumns; j++)
-                {
-                    System.out.print(loDecimalFormat.format(this.poQ[i][j][k]) + " ");
-
-                }
-                System.out.print(" | ");
-            }
-            System.out.println();
-        }
-        
-        System.out.println("\n");
-    }
-    
-    private float mxGetQ_Value(State toState, int tnAction)
-    {
-        return this.poQ[toState.pnX][toState.pnY][tnAction];
-    }
-
-    private State getNextState(State toState, int tnAction) 
-    {
-        State loStateTmp = null;
-        int lnX = toState.pnX + this.paMoveX[tnAction];
-        int lnY = toState.pnY + this.paMoveY[tnAction];
-        
-        if(lnX < 0 || lnY < 0 || lnX >= this.pnNumRows || lnY >= this.pnNumColumns)
-        {
-            loStateTmp = toState;          
-        }
-        else if(mxIsInvalid(lnX, lnY))
-        {
-            loStateTmp = this.poInitialState;
-        }
-        else
-            loStateTmp = new State(lnX, lnY);
-        
-        return loStateTmp;        
-    }
-    
-    private int mxGetMaxAction(State toState) 
-    {
-        int lnX, lnY;
-        State loStateTmp;
-        int lnBestAction = 0;
-        float lnBestQValue = -9999999f;
-        
-        for(int i = 0; i < 4; i++)
-        {
-            lnX = toState.pnX + this.paMoveX[i];
-            lnY = toState.pnY + this.paMoveY[i];
-            
-            if(lnX < 0 || lnY < 0 || lnX >= this.pnNumRows || lnY >= this.pnNumColumns)
-                continue;
-            if(mxIsInvalid(lnX, lnY))
-                continue;
-            
-            if(lnBestQValue < mxGetQ_Value(toState, i))
-            {
-                lnBestAction = i;
-                lnBestQValue = mxGetQ_Value(toState, i);                
-            }
-        }
-        return lnBestAction;
-    }
-    
-    private boolean mxIsInvalid(int tnX, int tnY)
-    {   
-        return (this.poR[tnX][tnY]) == -100;
-    }
-    
+        for(int i = 0; i < 200; i++)
+            ((GPanel)this.pnlTable).mxDrawLine();
+    }   
+   
     //Drawn
     void mxDrawTable()
     {
+        
+
         if(this.poGraphics == null)
         {
             this.poGraphics = (Graphics2D) this.pnlTable.getGraphics();
         }        
         
+        this.poGraphics.setPaint(Color.blue);
+       
+        int w = getWidth();
+        int h = getHeight();
+
+        Random r = new Random();
+
+        for (int i = 0; i < 2000; i++) {
+
+            int x = Math.abs(r.nextInt()) % w;
+            int y = Math.abs(r.nextInt()) % h;
+            this.poGraphics.drawLine(x, y, x, y);        
+        }
+    }
+    
+    void mxClean()
+    {
+        this.pnlTable.repaint();
     }
     
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmbStart;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel pnlTable;
     // End of variables declaration//GEN-END:variables
 }
