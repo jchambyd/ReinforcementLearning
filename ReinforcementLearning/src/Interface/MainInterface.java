@@ -5,28 +5,23 @@
  */
 package Interface;
 
-
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
-import java.text.DecimalFormat;
-import java.util.Random;
 import Logic.*;
 
 /**
  *
  * @author jorge
  */
-public class MainInterface extends javax.swing.JFrame {
-
-    private Graphics2D poGraphics;
-    private Line2D poLineBuffer;
-     
+public class MainInterface extends javax.swing.JFrame 
+{
+    private QLearning poLearning;
+    
     /**
      * Creates new form MainInterface
      */
     public MainInterface() {
-        initComponents();        
+        initComponents();
+        this.poLearning = new QLearning();
     }
 
     /**
@@ -39,44 +34,50 @@ public class MainInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         pnlTable = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        cmbStart = new javax.swing.JButton();
+        cmbProcess = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txnTrials = new javax.swing.JTextField();
+        txnIterations = new javax.swing.JTextField();
+        cmbRestart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Q-Learning");
 
         pnlTable = new GPanel();
         pnlTable.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout pnlTableLayout = new javax.swing.GroupLayout(pnlTable);
         pnlTable.setLayout(pnlTableLayout);
         pnlTableLayout.setHorizontalGroup(
             pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1021, Short.MAX_VALUE)
+            .addGap(0, 1216, Short.MAX_VALUE)
         );
         pnlTableLayout.setVerticalGroup(
             pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 449, Short.MAX_VALUE)
+            .addGap(0, 419, Short.MAX_VALUE)
         );
 
-        jButton1.setText("jButton1");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        cmbProcess.setText("Start");
+        cmbProcess.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                cmbProcessMouseClicked(evt);
             }
         });
 
-        jButton2.setText("jButton2");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
-            }
-        });
+        jLabel1.setText("# Iterations:");
 
-        cmbStart.setText("jButton3");
-        cmbStart.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabel2.setText("# Trials:");
+
+        txnTrials.setText("150");
+
+        txnIterations.setText("100");
+
+        cmbRestart.setText("Restart");
+        cmbRestart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cmbStartMouseClicked(evt);
+                cmbRestartMouseClicked(evt);
             }
         });
 
@@ -89,13 +90,23 @@ public class MainInterface extends javax.swing.JFrame {
                 .addComponent(pnlTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jButton1)
-                .addGap(67, 67, 67)
-                .addComponent(jButton2)
-                .addGap(38, 38, 38)
-                .addComponent(cmbStart)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txnIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(124, 124, 124)
+                        .addComponent(cmbProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txnTrials, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(444, 444, 444)
+                    .addComponent(cmbRestart, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(692, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,30 +115,37 @@ public class MainInterface extends javax.swing.JFrame {
                 .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(cmbStart))
-                .addContainerGap(128, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(txnTrials, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txnIterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(73, 73, 73))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(480, Short.MAX_VALUE)
+                    .addComponent(cmbRestart, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(74, 74, 74)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:        
-        //mxClean();
-        mxDrawTable();
-    }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void cmbProcessMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbProcessMouseClicked
         // TODO add your handling code here:
-        ((GPanel)this.pnlTable).repaint();
-    }//GEN-LAST:event_jButton2MouseClicked
+        this.poLearning.pnNumIterations = Integer.parseInt(this.txnIterations.getText());
+        this.poLearning.pnNumTrials = Integer.parseInt(this.txnTrials.getText());
+        this.poLearning.mxStartQLearning();
+        mxStartProcess();
+    }//GEN-LAST:event_cmbProcessMouseClicked
 
-    private void cmbStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbStartMouseClicked
+    private void cmbRestartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbRestartMouseClicked
         // TODO add your handling code here:
-        mxQ_Learning();
-    }//GEN-LAST:event_cmbStartMouseClicked
+        this.poLearning = new QLearning();
+        mxStartProcess();
+    }//GEN-LAST:event_cmbRestartMouseClicked
 
     /**
      * @param args the command line arguments
@@ -163,53 +181,38 @@ public class MainInterface extends javax.swing.JFrame {
             }
         });
     }
-    
-    void mxQ_Learning()
-    {
-        QLearning loQ = new QLearning();
-                
-        loQ.mxStartQLearning();
-        
-        for(int i = 0; i < 200; i++)
-            ((GPanel)this.pnlTable).mxDrawLine();
-    }   
    
     //Drawn
-    void mxDrawTable()
+    void mxStartProcess()
     {
-        
-
-        if(this.poGraphics == null)
-        {
-            this.poGraphics = (Graphics2D) this.pnlTable.getGraphics();
-        }        
-        
-        this.poGraphics.setPaint(Color.blue);
-       
-        int w = getWidth();
-        int h = getHeight();
-
-        Random r = new Random();
-
-        for (int i = 0; i < 2000; i++) {
-
-            int x = Math.abs(r.nextInt()) % w;
-            int y = Math.abs(r.nextInt()) % h;
-            this.poGraphics.drawLine(x, y, x, y);        
-        }
+        new Thread(){
+            @Override
+            public void run()
+            {
+                mxClean();
+                mxStart();
+            }                            
+        }.start();
+    }
+    
+    void mxStart()
+    {
+        ((GPanel)this.pnlTable).mxDrawEnviroment(this.poLearning);
+        ((GPanel)this.pnlTable).mxMarkState(this.poLearning.poCurrentState);
     }
     
     void mxClean()
     {
         this.pnlTable.repaint();
-    }
-    
-    
+    }       
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmbStart;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton cmbProcess;
+    private javax.swing.JButton cmbRestart;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel pnlTable;
+    private javax.swing.JTextField txnIterations;
+    private javax.swing.JTextField txnTrials;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,7 +11,7 @@ package Logic;
  */
 public class State
 {
-    int pnX, pnY;
+    public int pnX, pnY;
     
     public State(int tnX, int tnY)
     {

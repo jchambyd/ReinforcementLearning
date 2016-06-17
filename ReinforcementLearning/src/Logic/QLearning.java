@@ -16,17 +16,18 @@ public class QLearning {
     private int pnNumRows;
     private int pnNumColumns;
     
-    private int[][] poR;
-    private float[][][] poQ;
+    public int[][] poR;
+    public float[][][] poQ;
     final private State poInitialState = new State(3, 0);
     final private State poFinalState = new State(3, 11);
+    public State poCurrentState = poInitialState;
     
     final int paMoveX [] = {-1, 1, 0, 0};
     final int paMoveY [] = {0, 0, -1, 1};
     final private float pnGamma = 1f;
     
-    final int pnNumIterations = 100;
-    final int pnNumTrials = 200;
+    public int pnNumIterations = 100;
+    public int pnNumTrials = 1;
        
     
     public QLearning()
@@ -47,7 +48,7 @@ public class QLearning {
             for(int j = 0; j < pnNumColumns; j++)
                 this.poR[i][j] = -1;                
         
-        for(int i = 1; i < 10; i++)
+        for(int i = 1; i < 11; i++)
             this.poR[3][i] = -100;
         
         this.poR[this.poFinalState.pnX][this.poFinalState.pnY] = 100;
@@ -63,28 +64,18 @@ public class QLearning {
     {
         State loStateTmp;
         Random loRandom = new Random();
-        int lnAction, lnCont;    
+        int lnAction, lnCont;        
         
-        
-        for(int i = 0 ; i < 200; i++)
+        for(int i = 0 ; i < this.pnNumTrials; i++)
         {
-            System.out.println("Episodio: " + i);
-            
             lnCont = 0;
-            
             loStateTmp  = this.poInitialState;
-            
-            while((loStateTmp.pnX != this.poFinalState.pnX || loStateTmp.pnY != this.poFinalState.pnY) && lnCont < 100)
+
+            while((loStateTmp.pnX != this.poFinalState.pnX || loStateTmp.pnY != this.poFinalState.pnY) && lnCont < this.pnNumIterations)
             {   
                 lnCont++;
-
-                //System.out.println(lnCont);
-
-                //mxPrint(loStateTmp);
-
-                //mxPrintQ();
-                
-                if(loRandom.nextInt(200) <= i)
+              
+                if(loRandom.nextInt(this.pnNumTrials) <= i)
                     lnAction = mxGetMaxAction(loStateTmp);
                 else
                     lnAction = loRandom.nextInt(4);
@@ -97,11 +88,9 @@ public class QLearning {
                     loNextState = this.poInitialState;
                 
                 loStateTmp = loNextState;
+                this.poCurrentState = loStateTmp;
             }
-            
-            System.out.println(lnCont);
         }
-        mxPrintQ();
     }
     private void mxPrint(State toState)
     {
@@ -121,8 +110,7 @@ public class QLearning {
     
     private void mxPrintQ()
     {
-        DecimalFormat loDecimalFormat = new DecimalFormat("0.000");
-        
+        DecimalFormat loDecimalFormat = new DecimalFormat("0.000");        
         
         for(int i = 0; i < pnNumRows; i++)
         {
@@ -131,13 +119,11 @@ public class QLearning {
                 for(int j = 0; j < pnNumColumns; j++)
                 {
                     System.out.print(loDecimalFormat.format(this.poQ[i][j][k]) + " ");
-
                 }
                 System.out.print(" | ");
             }
             System.out.println();
-        }
-        
+        }        
         System.out.println("\n");
     }
     
@@ -148,7 +134,7 @@ public class QLearning {
 
     private State getNextState(State toState, int tnAction) 
     {
-        State loStateTmp = null;
+        State loStateTmp;
         int lnX = toState.pnX + this.paMoveX[tnAction];
         int lnY = toState.pnY + this.paMoveY[tnAction];
         
@@ -164,21 +150,11 @@ public class QLearning {
     
     private int mxGetMaxAction(State toState) 
     {
-        int lnX, lnY;
-        State loStateTmp;
         int lnBestAction = 0;
         float lnBestQValue = -9999999f;
         
         for(int i = 0; i < 4; i++)
-        {
-            lnX = toState.pnX + this.paMoveX[i];
-            lnY = toState.pnY + this.paMoveY[i];
-            
-            //if(lnX < 0 || lnY < 0 || lnX >= this.pnNumRows || lnY >= this.pnNumColumns)
-            //    continue;
-            //if(mxIsInvalid(lnX, lnY))
-            //    continue;
-            
+        {        
             if(lnBestQValue < mxGetQ_Value(toState, i))
             {
                 lnBestAction = i;
@@ -191,5 +167,5 @@ public class QLearning {
     private boolean mxIsPenhasco(int tnX, int tnY)
     {   
         return (this.poR[tnX][tnY]) == -100;
-    }    
+    }
 }
