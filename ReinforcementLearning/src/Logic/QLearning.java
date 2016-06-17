@@ -19,16 +19,20 @@ public class QLearning {
     public int[][] poR;
     public float[][][] poQ;
     final private State poInitialState = new State(3, 0);
-    final private State poFinalState = new State(3, 11);
+    final public State poFinalState = new State(3, 11);
     public State poCurrentState = poInitialState;
     
     final int paMoveX [] = {-1, 1, 0, 0};
     final int paMoveY [] = {0, 0, -1, 1};
     final private float pnGamma = 1f;
-    
+    public float pnEpsilon = 0.3f;
+    public int pnPolitic;
     public int pnNumIterations = 100;
+    public int pnNumIteration = 0;
     public int pnNumTrials = 1;
-       
+    private final int GREEDY = 0;
+    private final int E_GREEDY = 1;
+    private final int RANDOM = 2;
     
     public QLearning()
     {
@@ -39,6 +43,8 @@ public class QLearning {
     {
         this.pnNumRows = 4;
         this.pnNumColumns = 12;
+        this.pnPolitic = 1;
+        this.pnNumIteration = 0;
         
         this.poR = new int[this.pnNumRows][this.pnNumColumns];
         this.poQ = new float[this.pnNumRows][this.pnNumColumns][4];
@@ -63,7 +69,6 @@ public class QLearning {
     public void mxStartQLearning()
     {
         State loStateTmp;
-        Random loRandom = new Random();
         int lnAction, lnCont;        
         
         for(int i = 0 ; i < this.pnNumTrials; i++)
@@ -75,10 +80,7 @@ public class QLearning {
             {   
                 lnCont++;
               
-                if(loRandom.nextInt(this.pnNumTrials) <= i)
-                    lnAction = mxGetMaxAction(loStateTmp);
-                else
-                    lnAction = loRandom.nextInt(4);
+                lnAction = mxGetAction(loStateTmp, this.pnPolitic);
 
                 State loNextState = getNextState(loStateTmp, lnAction);
 
@@ -92,39 +94,53 @@ public class QLearning {
             }
         }
     }
-    private void mxPrint(State toState)
+    
+    public void mxOneStep()
     {
-        for(int i = 0; i < pnNumRows; i++)
+        State loStateTmp = this.poCurrentState;
+        
+        if((loStateTmp.pnX == this.poFinalState.pnX && loStateTmp.pnY == this.poFinalState.pnY))
         {
-            for(int j = 0; j < pnNumColumns; j++)
-            {
-                if(toState.pnX == i && toState.pnY == j)
-                    System.out.print("X");
-                else
-                    System.out.print("0");
-            }
-            System.out.println("");
+            this.poCurrentState = this.poInitialState;
+            this.pnNumIteration = 0;
+            return;
         }
-        System.out.println("\n");
+        
+        this.pnNumIteration++;
+       
+        int lnAction = mxGetAction(loStateTmp, this.pnPolitic);
+        State loNextState = getNextState(loStateTmp, lnAction);
+        
+        this.poQ[loStateTmp.pnX][loStateTmp.pnY][lnAction] += (1f /(float)this.pnNumIteration) * (poR[loNextState.pnX][loNextState.pnY] + pnGamma * (mxGetQ_Value(loNextState, mxGetMaxAction(loNextState))) - mxGetQ_Value(loStateTmp, lnAction));
+        
+        if(mxIsPenhasco(loNextState.pnX, loNextState.pnY))
+            loNextState = this.poInitialState;
+        
+        loStateTmp = loNextState;
+        
+        this.poCurrentState = loStateTmp;
     }
     
-    private void mxPrintQ()
+    private int mxGetAction(State toState, int tnPolitic)
     {
-        DecimalFormat loDecimalFormat = new DecimalFormat("0.000");        
-        
-        for(int i = 0; i < pnNumRows; i++)
-        {
-            for(int k = 0; k < 4 ; k++)
-            {
-                for(int j = 0; j < pnNumColumns; j++)
-                {
-                    System.out.print(loDecimalFormat.format(this.poQ[i][j][k]) + " ");
-                }
-                System.out.print(" | ");
-            }
-            System.out.println();
-        }        
-        System.out.println("\n");
+        Random loRandom = new Random();
+       int lnAction = 0;
+       
+       switch(tnPolitic)
+       {
+           case GREEDY:
+               lnAction = mxGetMaxAction(toState);
+               break;
+           case E_GREEDY:
+               if(loRandom.nextFloat() < pnEpsilon)
+                   lnAction = loRandom.nextInt(4);
+               else
+                   lnAction = mxGetMaxAction(toState);
+               break;
+           case RANDOM:
+               lnAction = loRandom.nextInt(4);               
+       }
+       return lnAction;
     }
     
     private float mxGetQ_Value(State toState, int tnAction)

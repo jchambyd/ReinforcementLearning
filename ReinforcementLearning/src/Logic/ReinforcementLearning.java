@@ -19,7 +19,7 @@ public class ReinforcementLearning {
     {
         // TODO code application logic here
         MainInterface lo = new MainInterface();
-        
-    }    
+        lo.setVisible(true);
+    }
 }
 

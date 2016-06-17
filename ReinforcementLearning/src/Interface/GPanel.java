@@ -38,9 +38,9 @@ public class GPanel extends JPanel
         this.getGraphics().drawLine(x, y, x, y);            
     }
     
-    public void mxMarkState(State toState)
+    public void mxMarkState(State toState, Graphics toGraphics)
     {
-        Graphics2D loGraphics = (Graphics2D)this.getGraphics();
+        Graphics2D loGraphics = (Graphics2D)toGraphics;
         int lnX = toState.pnY * this.pnLenSquare, lnY = toState.pnX * this.pnLenSquare;
         
         loGraphics.setColor (Color.blue);
@@ -50,10 +50,106 @@ public class GPanel extends JPanel
                             20,
                             20);        
     }
-    public void mxDrawState(State toState, float tnUp, float tnDown, float tnLeft, float tnRight)
+    public void mxMarkGoal(State toState, Graphics toGraphics)
     {
-        Graphics2D loGraphics = (Graphics2D)this.getGraphics();
+        Graphics2D loGraphics = (Graphics2D)toGraphics;
+        int lnX = toState.pnY * this.pnLenSquare, lnY = toState.pnX * this.pnLenSquare;
         
+        loGraphics.setColor (Color.red);
+        
+        loGraphics.fillRect(lnX + this.pnBorder,
+                            lnY + this.pnBorder, 
+                            this.pnLenSquare, 
+                            this.pnLenSquare);
+        
+        loGraphics.setColor (Color.black);        
+        loGraphics.setStroke(new BasicStroke(2));        
+        
+        loGraphics.drawRect(lnX + this.pnBorder,
+                            lnY + this.pnBorder, 
+                            this.pnLenSquare, 
+                            this.pnLenSquare);
+    }
+    
+    public void mxMarkRisk(State toState, Graphics toGraphics)
+    {
+        Graphics2D loGraphics = (Graphics2D)toGraphics;
+        int lnX = toState.pnY * this.pnLenSquare, lnY = toState.pnX * this.pnLenSquare;
+        
+        loGraphics.setColor (Color.blue);
+        
+        loGraphics.fillRect(lnX + this.pnBorder,
+                            lnY + this.pnBorder, 
+                            this.pnLenSquare, 
+                            this.pnLenSquare);
+        
+        loGraphics.setColor (Color.black);        
+        loGraphics.setStroke(new BasicStroke(2));        
+        
+        loGraphics.drawRect(lnX + this.pnBorder,
+                            lnY + this.pnBorder, 
+                            this.pnLenSquare, 
+                            this.pnLenSquare);
+    }
+    
+    private void mxDrawPart(int tnX, int tnY, int tnColor, int tnPos, Graphics2D loGraphics)
+    {
+        Color loColor = Color.white;
+        int lnX1, lnX2, lnY1, lnY2;
+        
+        switch(tnColor)
+        {
+            case 0:
+                loColor = Color.white;
+                break;
+            case 1:
+                loColor = Color.green;
+                break;
+            case 2:
+                loColor = Color.gray;
+                break;
+        }
+        
+        lnX1 = tnX + this.pnBorder;
+        lnX2 = tnX + this.pnBorder;
+        lnY1 = tnY + this.pnBorder;
+        lnY2 = tnY + this.pnBorder;
+        
+        switch(tnPos)
+        {
+            case 0:
+                lnX2 += this.pnLenSquare;
+                break;
+            case 1:
+                lnX2 += this.pnLenSquare;
+                lnY1 += this.pnLenSquare;
+                lnY2 += this.pnLenSquare;
+                break;
+            case 2:
+                lnY2 += this.pnLenSquare;
+                break;
+            case 3:
+                lnX1 += this.pnLenSquare;
+                lnX2 += this.pnLenSquare;
+                lnY2 += this.pnLenSquare;
+                break;
+        }
+        
+        int [] laVectorX = {lnX1, 
+                            lnX2, 
+                            tnX + this.pnBorder + (this.pnLenSquare / 2)};
+        int [] laVectorY = {lnY1,
+                            lnY2, 
+                            tnY + this.pnBorder + (this.pnLenSquare / 2)};
+        
+        loGraphics.setColor(loColor);
+        loGraphics.fillPolygon(laVectorX, laVectorY, 3);
+        loGraphics.setColor (Color.black);
+    }
+    
+    
+    public void mxDrawState(State toState, float tnUp, float tnDown, float tnLeft, float tnRight, Graphics2D toGraphics)
+    {
         DecimalFormat loDecFor = new DecimalFormat("0.000");
         int lnX = toState.pnY * this.pnLenSquare, lnY = toState.pnX * this.pnLenSquare;
         
@@ -62,118 +158,64 @@ public class GPanel extends JPanel
         lnLow = (lnLow >= tnLeft) ? lnLow : tnLeft;
         lnLow = (lnLow >= tnRight) ? lnLow : tnRight;        
         
-        int [] laVectorX1 = {lnX + this.pnBorder, 
-                             lnX + this.pnBorder + this.pnLenSquare, 
-                             lnX + this.pnBorder + (this.pnLenSquare / 2)};
-        int [] laVectorY1 = {lnY + this.pnBorder,
-                             lnY + this.pnBorder, 
-                             lnY + this.pnBorder + (this.pnLenSquare / 2)};
         
-        if(lnLow == tnUp)
-        {
-            loGraphics.setColor(Color.GREEN);
-            loGraphics.fillPolygon(laVectorX1, laVectorY1, 3);
-            loGraphics.setColor (Color.black);
-        }
-        else
-            loGraphics.drawPolygon(laVectorX1, laVectorY1, 3);
+        mxDrawPart(lnX, lnY, (tnUp == 0) ? 2 : (tnUp == lnLow ? 1 : 0), 0, toGraphics);
         
-        int [] laVectorX2 = {lnX + this.pnBorder, 
-                             lnX + this.pnBorder, 
-                             lnX + this.pnBorder + (this.pnLenSquare / 2)};
-        int [] laVectorY2 = {lnY + this.pnBorder,
-                             lnY + this.pnBorder + this.pnLenSquare, 
-                             lnY + this.pnBorder + (this.pnLenSquare / 2)};
+        mxDrawPart(lnX, lnY, (tnDown == 0) ? 2 : (tnDown == lnLow ? 1 : 0), 1, toGraphics);
+
+        mxDrawPart(lnX, lnY, (tnLeft == 0) ? 2 : (tnLeft == lnLow ? 1 : 0), 2, toGraphics);
         
-        if(lnLow == tnLeft)
-        {
-            loGraphics.setColor(Color.GREEN);
-            loGraphics.fillPolygon(laVectorX2, laVectorY2, 3);
-            loGraphics.setColor (Color.black);
-        }
-        else
-            loGraphics.drawPolygon(laVectorX2, laVectorY2, 3);
+        mxDrawPart(lnX, lnY, (tnRight == 0) ? 2 : (tnRight == lnLow ? 1 : 0), 3, toGraphics);
         
-        int [] laVectorX3 = {lnX + this.pnBorder, 
-                             lnX + this.pnBorder + this.pnLenSquare, 
-                             lnX + this.pnBorder + (this.pnLenSquare / 2)};
-        int [] laVectorY3 = {lnY + this.pnBorder + this.pnLenSquare,
-                             lnY + this.pnBorder + this.pnLenSquare, 
-                             lnY + this.pnBorder + (this.pnLenSquare / 2)};
+        toGraphics.setStroke(new BasicStroke(2));        
         
-        if(lnLow == tnDown)
-        {
-            loGraphics.setColor(Color.GREEN);
-            loGraphics.fillPolygon(laVectorX3, laVectorY3, 3);
-            loGraphics.setColor (Color.black);
-        }
-        else
-            loGraphics.drawPolygon(laVectorX3, laVectorY3, 3);
-        
-        
-        int [] laVectorX4 = {lnX + this.pnBorder + this.pnLenSquare, 
-                             lnX + this.pnBorder + this.pnLenSquare, 
-                             lnX + this.pnBorder + (this.pnLenSquare / 2)};
-        int [] laVectorY4 = {lnY + this.pnBorder,
-                             lnY + this.pnBorder + this.pnLenSquare, 
-                             lnY + this.pnBorder + (this.pnLenSquare / 2)};
-        
-        if(lnLow == tnRight)
-        {
-            loGraphics.setColor(Color.GREEN);
-            loGraphics.fillPolygon(laVectorX4, laVectorY4, 3);
-            loGraphics.setColor (Color.black);
-        }
-        else
-            loGraphics.drawPolygon(laVectorX4, laVectorY4, 3);
-        
-        
-        loGraphics.setStroke(new BasicStroke(2));        
-        
-        loGraphics.drawRect(lnX + this.pnBorder,
+        toGraphics.drawRect(lnX + this.pnBorder,
                             lnY + this.pnBorder, 
                             this.pnLenSquare, 
                             this.pnLenSquare);
         
-        loGraphics.setStroke(new BasicStroke(1));
+        toGraphics.setStroke(new BasicStroke(1));
                 
-        loGraphics.drawLine(lnX + this.pnBorder, 
+        toGraphics.drawLine(lnX + this.pnBorder, 
                                     lnY + this.pnBorder, 
                                     lnX + this.pnBorder + this.pnLenSquare, 
                                     lnY + this.pnBorder + this.pnLenSquare);
-        loGraphics.drawLine(lnX + this.pnBorder + this.pnLenSquare, 
+        toGraphics.drawLine(lnX + this.pnBorder + this.pnLenSquare, 
                                     lnY + this.pnBorder, 
                                     lnX + this.pnBorder, 
                                     lnY + this.pnBorder + this.pnLenSquare);
         
         
-        loGraphics.setFont(new Font("TimesRoman", Font.PLAIN, 12)); 
+        toGraphics.setFont(new Font("TimesRoman", Font.PLAIN, 12)); 
         
         //UP
-        loGraphics.drawString(loDecFor.format(tnUp), 
+        toGraphics.drawString(loDecFor.format(tnUp), 
                               lnX + this.pnBorder + this.pnLenSquare / 4 + 6,
                               lnY + this.pnBorder + this.pnLenSquare / 4 - 5);
         //DOWN
-        loGraphics.drawString(loDecFor.format(tnDown), 
+        toGraphics.drawString(loDecFor.format(tnDown), 
                                       lnX + this.pnBorder + this.pnLenSquare / 4 + 6,
                                       lnY + this.pnBorder + this.pnLenSquare - 12 );
         //LEFT
-        loGraphics.drawString(loDecFor.format(tnLeft), 
+        toGraphics.drawString(loDecFor.format(tnLeft), 
                                       lnX + this.pnBorder + 4,
                                       lnY + this.pnBorder + this.pnLenSquare / 2 + 6);
         //RIGTH
-        loGraphics.drawString(loDecFor.format(tnRight), 
+        toGraphics.drawString(loDecFor.format(tnRight), 
                                       lnX + this.pnBorder + this.pnLenSquare / 2 + 12,
                                       lnY + this.pnBorder + this.pnLenSquare / 2 + 6);
     }
     
-    public void mxDrawEnviroment(QLearning toEnviroment)
+    public void mxDrawEnviroment(QLearning toEnviroment, Graphics toGraphics)
     {
+        if(toGraphics == null)
+            toGraphics = this.getGraphics();        
+        
         for(int i = 0; i < toEnviroment.poR.length; i++)
         {
             for(int j = 0; j < toEnviroment.poR[0].length; j++)
             {
-                mxDrawState(new State(i, j), toEnviroment.poQ[i][j][0], toEnviroment.poQ[i][j][1], toEnviroment.poQ[i][j][2], toEnviroment.poQ[i][j][3]);
+                mxDrawState(new State(i, j), toEnviroment.poQ[i][j][0], toEnviroment.poQ[i][j][1], toEnviroment.poQ[i][j][2], toEnviroment.poQ[i][j][3], (Graphics2D)toGraphics);
             }
         }                
     }    
@@ -181,5 +223,11 @@ public class GPanel extends JPanel
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        QLearning loLearning = new QLearning();
+        mxDrawEnviroment(loLearning, g);
+        mxMarkGoal(loLearning.poFinalState, g);        
+        for(int i = 1; i < 11; i++)
+            mxMarkRisk(new State(3, i), g);        
+        mxMarkState(loLearning.poCurrentState, g);
     }
 }
