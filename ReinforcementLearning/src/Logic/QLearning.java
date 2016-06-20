@@ -5,9 +5,7 @@
  */
 package Logic;
 
-import java.text.DecimalFormat;
 import java.util.Random;
-
 /**
  *
  * @author jorge
@@ -180,7 +178,7 @@ public class QLearning {
         return lnBestAction;
     }
     
-    private boolean mxIsPenhasco(int tnX, int tnY)
+    public boolean mxIsPenhasco(int tnX, int tnY)
     {   
         return (this.poR[tnX][tnY]) == -100;
     }

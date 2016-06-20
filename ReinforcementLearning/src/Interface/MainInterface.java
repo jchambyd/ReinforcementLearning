@@ -56,7 +56,7 @@ public class MainInterface extends javax.swing.JFrame
         jLabel6 = new javax.swing.JLabel();
         txnIteration = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        cmbExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Q-Learning");
@@ -204,10 +204,10 @@ public class MainInterface extends javax.swing.JFrame
 
         jLabel5.setText("One Step Values:");
 
-        jButton1.setText("Exit");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        cmbExit.setText("Exit");
+        cmbExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                cmbExitMouseClicked(evt);
             }
         });
 
@@ -242,7 +242,7 @@ public class MainInterface extends javax.swing.JFrame
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(pnlOneStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(cmbExit, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -268,7 +268,7 @@ public class MainInterface extends javax.swing.JFrame
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pnlOneStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbExit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 40, Short.MAX_VALUE))
         );
 
@@ -302,32 +302,15 @@ public class MainInterface extends javax.swing.JFrame
         mxStart();
     }//GEN-LAST:event_cmbOneStepMouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void cmbExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbExitMouseClicked
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_jButton1MouseClicked
-   
-    //Drawn
-    void mxStartProcess()
-    {
-        new Thread(){
-            @Override
-            public void run()
-            {
-                mxClean();
-                mxStart();
-            }                            
-        }.start();
-    }
+    }//GEN-LAST:event_cmbExitMouseClicked
     
     private void mxStart()
     {
         ((GPanel)this.pnlTable).mxDrawEnviroment(this.poLearning, this.pnlTable.getGraphics());
         ((GPanel)this.pnlTable).mxMarkGoal(this.poLearning.poFinalState, this.pnlTable.getGraphics());
-        
-        for(int i = 1; i < 11; i++)
-            ((GPanel)this.pnlTable).mxMarkRisk(new State(3, i), this.pnlTable.getGraphics());
-        
         ((GPanel)this.pnlTable).mxMarkState(this.poLearning.poCurrentState, this.pnlTable.getGraphics());
     }
     
@@ -339,19 +322,14 @@ public class MainInterface extends javax.swing.JFrame
             return 1;
         else
             return 2;
-    }
-    
-    private void mxClean()
-    {
-        this.pnlTable.repaint();
-    }       
+    }     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmbExit;
     private javax.swing.JButton cmbOneStep;
     private javax.swing.JButton cmbProcess;
     private javax.swing.JButton cmbRestart;
     private javax.swing.ButtonGroup gbnPolitics;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

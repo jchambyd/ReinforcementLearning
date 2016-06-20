@@ -59,7 +59,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="pnlOneStep" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton1" min="-2" pref="95" max="-2" attributes="0"/>
+                              <Component id="cmbExit" min="-2" pref="95" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -96,7 +96,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="pnlOneStep" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jButton1" alignment="1" min="-2" pref="37" max="-2" attributes="0"/>
+                  <Component id="cmbExit" alignment="1" min="-2" pref="37" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="40" max="32767" attributes="0"/>
           </Group>
@@ -347,12 +347,12 @@
         <Property name="text" type="java.lang.String" value="One Step Values:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="cmbExit">
       <Properties>
         <Property name="text" type="java.lang.String" value="Exit"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton1MouseClicked"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmbExitMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>

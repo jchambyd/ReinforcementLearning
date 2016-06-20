@@ -215,10 +215,13 @@ public class GPanel extends JPanel
         {
             for(int j = 0; j < toEnviroment.poR[0].length; j++)
             {
-                mxDrawState(new State(i, j), toEnviroment.poQ[i][j][0], toEnviroment.poQ[i][j][1], toEnviroment.poQ[i][j][2], toEnviroment.poQ[i][j][3], (Graphics2D)toGraphics);
+                if(!toEnviroment.mxIsPenhasco(i, j))
+                    mxDrawState(new State(i, j), toEnviroment.poQ[i][j][0], toEnviroment.poQ[i][j][1], toEnviroment.poQ[i][j][2], toEnviroment.poQ[i][j][3], (Graphics2D)toGraphics);
+                else
+                    mxMarkRisk(new State(i, j), toGraphics);
             }
-        }                
-    }    
+        }
+    }
 
     @Override
     public void paintComponent(Graphics g) {
